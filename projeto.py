@@ -27,6 +27,8 @@ Funcao de cadastrar conta corrente
 - Nao deixar criar conta sem vincular um usuario 
 """
 
+import re
+
 def sacar(saldo, valor, extrato, limite, numero_saques, limite_saques):
     ...
 
@@ -44,3 +46,62 @@ def cadastrar_cta_corrente():
 
 def listar_contas():
     ...
+
+def filtrar_num_str(numeros):
+    numeros = re.sub(r'[^0-9]','', numeros)
+    return numeros
+
+
+menu = """
+[u] Cadastrar Usuario
+[c] Cadastrar conta corrente
+[d] Depositar
+[s] Sacar
+[e] Extrato
+[q] Sair
+
+=> """
+
+saldo = 0
+limite = 500
+extrato = ""
+numero_saques = 0
+LIMITE_SAQUES = 3
+usuarios = [{'cpf' : '00000000000'}]
+
+print(usuarios[0]['cpf'])
+while True:
+
+    opcao = input(menu)
+
+    if opcao == "u":
+        while True:
+            cpf = filtrar_num_str(input('Digite o cpf do usuario: '))
+            if len(cpf) != 11:
+                print('CPF Invalido!')
+                continue  
+            
+            cont_cpf = 0
+            for i in range(len(usuarios)):
+                if usuarios[i]['cpf'] == cpf:
+                    cont_cpf += 1
+                    break
+            
+            if cont_cpf > 0:
+                print('CPF ja existe!')
+                break
+
+            
+
+
+
+
+            # nome = input('Digite o nome do usuario: ')
+            # dt_nasc = input('Digite a data de nascimento: ')
+            # logradouro = input('Digite o Logradouro do usuario:')
+            # numero = input('Digite o numero do endereco do usuario: ')
+            
+            
+
+
+    break
