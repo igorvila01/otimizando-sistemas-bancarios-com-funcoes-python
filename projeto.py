@@ -38,8 +38,13 @@ def depositar(saldo, valor, extrato):
 def extrato(saldo, extrato):
     ...
 
-def cadastrar_usuario():
-    ...
+def cadastrar_usuario(nome, dt_nasc, cpf, endereco):
+    usuario = {'nome': nome,
+               'dt_nasc': dt_nasc, 
+               'cpf': cpf,
+               'endereco': endereco
+               }
+    return usuario
 
 def cadastrar_cta_corrente():
     ...
@@ -53,7 +58,7 @@ def filtrar_num_str(numeros):
 
 
 menu = """
-[u] Cadastrar Usuario
+[i] Cadastrar Usuario
 [c] Cadastrar conta corrente
 [d] Depositar
 [s] Sacar
@@ -67,41 +72,56 @@ limite = 500
 extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
-usuarios = [{'cpf' : '00000000000'}]
-
-print(usuarios[0]['cpf'])
+usuarios = []
 while True:
 
     opcao = input(menu)
 
-    if opcao == "u":
+    if opcao == "i":
         while True:
-            cpf = filtrar_num_str(input('Digite o cpf do usuario: '))
+            cpf = filtrar_num_str(input('CPF do usuario: '))
             if len(cpf) != 11:
                 print('CPF Invalido!')
                 continue  
-            
+
             cont_cpf = 0
-            for i in range(len(usuarios)):
-                if usuarios[i]['cpf'] == cpf:
-                    cont_cpf += 1
-                    break
+
+            if len(usuarios) > 0:                
+                for i in range(len(usuarios)):
+                    if usuarios[i]['cpf'] == cpf:
+                        cont_cpf += 1
+                        break
             
             if cont_cpf > 0:
-                print('CPF ja existe!')
-                break
+                print('CPF ja cadastrado!')   
+                break                  
+            
+            nome = input('Nome do usuario: ')
+            dt_nasc = input('Data de nascimento: ')
+            logradouro = input('Logradouro: ')
+            numero = input('Numero: ')
+            bairro = input('Bairro: ')
+            cidade = input('Cidade: ')
+            sigla_estado = input('Sigla estado: ')
 
+            cidade_estado = f'{cidade}/{sigla_estado}'
+
+            endereco = {
+                'logradouro' : logradouro,
+                'numero' : numero,
+                'bairro' : bairro,
+                'cidade_estado': cidade_estado
+            }
+            usuarios.append(cadastrar_usuario(nome, dt_nasc, cpf, endereco))
+            break
+    
+    print(usuarios)
+
+
+
+
+            
             
 
 
-
-
-            # nome = input('Digite o nome do usuario: ')
-            # dt_nasc = input('Digite a data de nascimento: ')
-            # logradouro = input('Digite o Logradouro do usuario:')
-            # numero = input('Digite o numero do endereco do usuario: ')
-            
-            
-
-
-    break
+    
