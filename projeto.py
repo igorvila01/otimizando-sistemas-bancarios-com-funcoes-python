@@ -21,7 +21,7 @@ Função de cadastro de usuario:
 Funcao de cadastrar conta corrente 
 - Deve armazenar contas em uma lista 
 - é composta por agencia, numero da conta e usuario 
-- Numero da conta é sequncial e o numero da agencia é fixo "0001"
+- Numero da conta é sequencial e o numero da agencia é fixo "0001"
 - O usuario pode ter mais de uma conta, mas uma conta pode pertencer a apenas um usuario 
 - para vincular usuario a uma conta, filtre a lista de usuarios buscando pelo cpf informado para cada usuario da lista 
 - Nao deixar criar conta sem vincular um usuario 
@@ -113,19 +113,21 @@ while True:
 
             usuarios.append(cadastrar_usuario(nome, dt_nasc, cpf, logradouro, numero, bairro, cidade_estado))
             break
+    
+    elif opcao == 'c':
+        while True:
+            cpf = filtrar_num_str(input('CPF do Usuario: '))
+
+            if len(cpf) != 11:
+                print('CPF Inválido! ')
+                continue
+
+            
+
 
     elif opcao == 'q':
         break
-    
+
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")    
-    
-
-
-
-
-            
-            
-
-
     
