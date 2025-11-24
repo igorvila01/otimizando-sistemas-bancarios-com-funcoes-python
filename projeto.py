@@ -38,11 +38,16 @@ def depositar(saldo, valor, extrato):
 def extrato(saldo, extrato):
     ...
 
-def cadastrar_usuario(nome, dt_nasc, cpf, endereco):
+def cadastrar_usuario(nome, dt_nasc, cpf, logradouro, numero, bairro, cidade_estado):
     usuario = {'nome': nome,
                'dt_nasc': dt_nasc, 
                'cpf': cpf,
-               'endereco': endereco
+               'endereco' : {
+                            'logradouro' : logradouro,
+                            'numero' : numero,
+                            'bairro' : bairro,
+                            'cidade_estado': cidade_estado
+                            }
                }
     return usuario
 
@@ -106,16 +111,15 @@ while True:
 
             cidade_estado = f'{cidade}/{sigla_estado}'
 
-            endereco = {
-                'logradouro' : logradouro,
-                'numero' : numero,
-                'bairro' : bairro,
-                'cidade_estado': cidade_estado
-            }
-            usuarios.append(cadastrar_usuario(nome, dt_nasc, cpf, endereco))
+            usuarios.append(cadastrar_usuario(nome, dt_nasc, cpf, logradouro, numero, bairro, cidade_estado))
             break
+
+    elif opcao == 'q':
+        break
     
-    print(usuarios)
+    else:
+        print("Operação inválida, por favor selecione novamente a operação desejada.")    
+    
 
 
 
