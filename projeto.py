@@ -33,10 +33,24 @@ def sacar(saldo, valor, extrato, limite, numero_saques, limite_saques):
     ...
 
 def depositar(saldo, valor, extrato):
-    ...
+    if valor <= 0:
+        print("Valor inválido para depósito.")
+    else:
+        saldo += valor
+        extrato.append(f"Depósito: +R${valor:.2f}")
+        print(f"Depósito de R${valor:.2f} realizado com sucesso.")
+    return saldo, extrato
+
 
 def extrato(saldo, extrato):
-    ...
+    print("\n================ EXTRATO ================")
+    if not extrato:
+        print('Não foram realizadas movimentações.')
+    else:
+        for i in extrato:
+            print(i)
+    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("==========================================")
 
 def cadastrar_usuario(nome, dt_nasc, cpf, logradouro, numero, bairro, cidade_estado):
     usuario = {'nome': nome,
@@ -51,8 +65,15 @@ def cadastrar_usuario(nome, dt_nasc, cpf, logradouro, numero, bairro, cidade_est
                }
     return usuario
 
-def cadastrar_cta_corrente():
-    ...
+def cadastrar_cta_corrente(cpf, cc):
+    conta_corrente = {
+        'ag' : '0001',
+        'cc' : cc,
+        'cpf' : cpf,
+        'saldo' : 0.0,
+        'extrato': []
+    }
+    return conta_corrente
 
 def listar_contas():
     ...
@@ -74,10 +95,20 @@ menu = """
 
 saldo = 0
 limite = 500
-extrato = ""
+# extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 usuarios = []
+contas = []
+contas = [{
+        'ag' : '0001',
+        'cc' : 1,
+        'cpf' : '42808055803',
+        'saldo' : 0.0,
+        'extrato': []
+    }]
+# usuarios = [{'cpf' : '00000000000'},
+#             {'cpf' : '11111111111'}]
 while True:
 
     opcao = input(menu)
@@ -120,10 +151,70 @@ while True:
 
             if len(cpf) != 11:
                 print('CPF Inválido! ')
+                continue            
+            
+            contar = 0
+            for i in range(len(usuarios)):
+                cpf_atual = usuarios[i]['cpf']
+                if cpf_atual == cpf:
+                    contar +=1
+            
+            if contar > 0:
+                cc = len(contas) + 1                
+            else:
+                print('Usuario nao possui cadastro, voltando ao menu anterior para efetuar cadastro!')
+                break
+
+            contas.append(cadastrar_cta_corrente(cpf, cc))
+            print(f'Conta Corrente: {contas[cc-1]['cc']} \nAgencia: {contas[cc-1]['ag']}')
+            print(contas)
+            break
+
+    elif opcao == 'd':
+        while True:
+            conta_atual = int(input('Digite o numero da conta:'))
+            
+            conta_encontrada = None
+            for verifica in contas:
+                if verifica['cc']==conta_atual:
+                    conta_encontrada = verifica
+                    break
+            
+            if not conta_encontrada:
+                print('Conta não encontrada!')
                 continue
 
-            
+            break
 
+        while True:
+            try:
+                valor = float(input("Informe o valor do depósito: "))
+                break                    
+            except ValueError:
+                print('O Valor informado é inválido!')
+                continue     
+
+        saldo_atual, extrato_atual = depositar(conta_encontrada['saldo'], valor, conta_encontrada['extrato'])
+        conta_encontrada['saldo'] = saldo_atual
+        conta_encontrada['extrato'] = extrato_atual
+   
+    elif opcao == 'e':
+        while True:
+            conta_atual = int(input('Digite o numero da conta:'))
+            
+            conta_encontrada = None
+            for verifica in contas:
+                if verifica['cc']==conta_atual:
+                    conta_encontrada = verifica
+                    break
+            
+            if not conta_encontrada:
+                print('Conta não encontrada!')
+                continue
+
+            break
+
+        extrato(conta_encontrada['saldo'], extrato=conta_encontrada['extrato'])
 
     elif opcao == 'q':
         break
