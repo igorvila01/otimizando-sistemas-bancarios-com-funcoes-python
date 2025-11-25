@@ -40,7 +40,7 @@ O sistema é interativo e apresenta o seguinte menu:
 
 🚀 Como Executar
 - Clone este repositório:
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone (https://github.com/igorvila01/otimizando-sistemas-bancarios-com-funcoes-python.git)
 - Acesse a pasta do projeto:
 cd seu-repositorio
 - Execute o script:
