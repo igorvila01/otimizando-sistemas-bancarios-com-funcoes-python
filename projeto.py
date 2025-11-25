@@ -30,7 +30,29 @@ Funcao de cadastrar conta corrente
 import re
 
 def sacar(saldo, valor, extrato, limite, numero_saques, limite_saques):
-    ...
+    excedeu_saldo = valor > saldo
+    excedeu_limite = valor > limite
+    excedeu_saques = numero_saques >= limite_saques
+
+    if excedeu_saldo:
+            print("Operação falhou! Você não tem saldo suficiente.")
+
+    elif excedeu_limite:
+        print("Operação falhou! O valor do saque excede o limite.")
+
+    elif excedeu_saques:
+        print("Operação falhou! Número máximo de saques excedido.")
+
+    elif valor > 0:
+        saldo -= valor
+        extrato.append(f"Saque: R$ {valor:.2f}\n")
+        print(f"Saque no valor de R$ {valor:.2f} realizado com sucesso.")
+        numero_saques += 1
+
+    else:
+        print("Operação falhou! O valor informado é inválido.")
+
+    return saldo, extrato, numero_saques
 
 def depositar(saldo, valor, extrato):
     if valor <= 0:
@@ -71,12 +93,17 @@ def cadastrar_cta_corrente(cpf, cc):
         'cc' : cc,
         'cpf' : cpf,
         'saldo' : 0.0,
-        'extrato': []
+        'extrato': [],
+        'numero_saques': 0
     }
     return conta_corrente
 
 def listar_contas():
-    ...
+    print("\n================ CONTAS CADASTRADAS ================")
+    for i in range(len(contas)):
+        print(f"Agência: {contas[i]['ag']}  |  Conta: {contas[i]['cc']}  |  CPF: {contas[i]['cpf']}")
+
+    print("\n====================================================")
 
 def filtrar_num_str(numeros):
     numeros = re.sub(r'[^0-9]','', numeros)
@@ -89,26 +116,18 @@ menu = """
 [d] Depositar
 [s] Sacar
 [e] Extrato
+[l] Listar conta corrente
 [q] Sair
 
 => """
 
-saldo = 0
+
 limite = 500
-# extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 usuarios = []
 contas = []
-contas = [{
-        'ag' : '0001',
-        'cc' : 1,
-        'cpf' : '42808055803',
-        'saldo' : 0.0,
-        'extrato': []
-    }]
-# usuarios = [{'cpf' : '00000000000'},
-#             {'cpf' : '11111111111'}]
+
 while True:
 
     opcao = input(menu)
@@ -167,7 +186,6 @@ while True:
 
             contas.append(cadastrar_cta_corrente(cpf, cc))
             print(f'Conta Corrente: {contas[cc-1]['cc']} \nAgencia: {contas[cc-1]['ag']}')
-            print(contas)
             break
 
     elif opcao == 'd':
@@ -194,7 +212,10 @@ while True:
                 print('O Valor informado é inválido!')
                 continue     
 
-        saldo_atual, extrato_atual = depositar(conta_encontrada['saldo'], valor, conta_encontrada['extrato'])
+        saldo_conta = conta_encontrada['saldo']
+        extrato_conta = conta_encontrada['extrato']
+
+        saldo_atual, extrato_atual = depositar(saldo_conta, valor, extrato_conta)
         conta_encontrada['saldo'] = saldo_atual
         conta_encontrada['extrato'] = extrato_atual
    
@@ -218,6 +239,47 @@ while True:
 
     elif opcao == 'q':
         break
+
+    elif opcao == 's':
+        while True:
+            conta_atual = int(input('Digite o numero da conta:'))
+            
+            conta_encontrada = None
+            for verifica in contas:
+                if verifica['cc']==conta_atual:
+                    conta_encontrada = verifica
+                    break
+            
+            if not conta_encontrada:
+                print('Conta não encontrada!')
+                continue
+
+            break
+
+        while True:
+            try:
+                valor = float(input("Informe o valor do Saque: "))
+                break                    
+            except ValueError:
+                print('O Valor informado é inválido!')
+                continue 
+
+        saldo_conta = conta_encontrada['saldo']
+        extrato_conta = conta_encontrada['extrato']
+        saques_conta = conta_encontrada['numero_saques']
+
+        saldo_atual, extrato_atual, saques_atual = sacar(saldo=saldo_conta, 
+                                           valor=valor, 
+                                           extrato=extrato_conta, 
+                                           limite=limite, 
+                                           numero_saques=saques_conta, 
+                                           limite_saques=LIMITE_SAQUES )
+        conta_encontrada['saldo'] = saldo_atual
+        conta_encontrada['extrato'] = extrato_atual 
+        conta_encontrada['numero_saques'] = saques_atual
+
+    elif opcao == 'l':
+        listar_contas()
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")    
